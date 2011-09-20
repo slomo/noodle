@@ -1,2 +1,3 @@
-etc/config.sample.json
+etc/config.json
 .swp
+node_modules
