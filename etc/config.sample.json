@@ -1,0 +1,7 @@
+{
+    "dbuser"  : "noodle",
+    "dbpass"  : "topsecret",
+    "dbserver": "staff.mongohq.com",
+    "dbname"  : "noodle",
+    "dbport"  : 10026
+}
