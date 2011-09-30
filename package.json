@@ -8,7 +8,8 @@
         "underscore" : "1.1.6",
         "log4js" : ">=0.2.6",
         "express" : "*",
-        "mongodb" : "*"
+        "mongodb" : "*",
+        "coffee-script" : "*"
     },
     "devDependencies" : {
         "vows" : "*",
