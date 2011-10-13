@@ -46,7 +46,7 @@ class Store
 class Poll
 
     constructor : (data) ->
-        @id = data.id
+        aad = data.id
         @name = data.name
 
 
@@ -60,6 +60,22 @@ class NotFound extends Error
         Error.call(@, msg)
         Error.captureStackTrace(@, arguments.callee)
 
+validatePid = (req,res,next) ->
+    req.pid = parseInt req.params.id
+    next()
+
+class Handler
+    constructor : (@store) ->
+
+    getPoll : (req,res,next) ->
+        @store.getPoll req.pid, (err,poll) ->
+            if err or not poll
+                next (new NotFound 'Did got that one')
+            else
+                @store.getVotesByPoll req.pid, (err,votes) ->
+                    poll.votes = votes
+                    res.send(poll)
+
 
 
 start = (store) ->
@@ -69,21 +85,15 @@ start = (store) ->
         if err instanceof NotFound
             res.writeHead 404
         else
+            console.log(err)
             res.writeHead 500
         res.end()
 
-    app.get '/poll/:id', (req,res,next) ->
-        id = parseInt(req.params.id)
-        store.getPoll id, (err,poll) ->
-            if err or not poll
-                next (new NotFound 'Did got that one')
-            else
-                store.getVotesByPoll id, (err,votes) ->
-                    poll.votes = votes
-                    res.send(poll)
+    handler = new Handler store
 
-    app.post '/poll', (req,res,next) ->
-        console.log req.body
+    app.get '/poll/:id', [validatePid, handler.getPoll]
+
+    app.post '/poll', [decode
 
     app.listen 3000
 
